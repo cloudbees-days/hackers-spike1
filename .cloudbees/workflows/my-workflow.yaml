@@ -159,6 +159,8 @@ jobs:
             | CRITICAL_COUNT       | ${{ steps.FetchSonarQubeIssues.outputs.CRITICAL_COUNT }} |
             | MAJOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT }} |
             | MINOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MINOR_COUNT }} |
+            | CRITICAL_COUNT2          | ${{ steps.sonar-scan.outputs.critical-count }} |
+            | VERY_HIGH_COUNT2          | ${{ steps.sonar-scan.outputs.very-high-count }} |
           format: MARKDOWN
   deploy:
 ## SPIKE-BUSTER to enter a CBC interogtation step here. 
