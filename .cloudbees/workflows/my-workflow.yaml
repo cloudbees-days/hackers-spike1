@@ -119,8 +119,8 @@ jobs:
         with:
           server-url: https://sonarqube.cb-demos.io
           
-          username: ${{ secrets.SONAR_USER }}
-          password: ${{ secrets.SONAR_TOKEN }}
+          # username: ${{ secrets.SONAR_USER }}
+          access-token: ${{ secrets.SONAR_TOKEN }}
           language: LANGUAGE_JS
       - uses: cloudbees-io/snyk-sast-scan-code@v1
         name: Synk SAST
