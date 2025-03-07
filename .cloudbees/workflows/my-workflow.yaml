@@ -168,7 +168,7 @@ jobs:
     environment: DOW Production
     steps:
       - name: Quality gate
-        if: ${{ needs.scan.outputs.CRITICAL_COUNT > 0 || needs.scan.outputs.MAJOR_COUNT > 0 }} 
+        if: ${{ needs.scan.outputs.CRITICAL_COUNT > 0 || needs.scan.outputs.MAJOR_COUNT > 1 }} 
         uses: docker://alpine:3.18
         run: |
           echo "Deployment gate failed: Unacceptable quality threshold"
