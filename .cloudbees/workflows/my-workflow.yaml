@@ -108,20 +108,13 @@ jobs:
           npm run test:coverage
       - uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v1
         name: Scan with SonarQube
+        id: sonar-scan
         kind: scan
         continue-on-error: true
         with:
           language: LANGUAGE_JS
           cover-file-name: coverage/clover.xml
           sonar-exclusion: tests/*
-      - name: Scan with SonarQube-exr
-        uses: https://github.com/cloudbees-io/sonarqube-sast-scan-code@v1
-        with:
-          server-url: https://sonarqube.cb-demos.io
-          
-          # username: ${{ secrets.SONAR_USER }}
-          access-token: ${{ secrets.SONAR_TOKEN }}
-          language: LANGUAGE_JS
       - uses: cloudbees-io/snyk-sast-scan-code@v1
         name: Synk SAST
         kind: scan
@@ -165,10 +158,12 @@ jobs:
             
             | Severity             | Issue Count |
             |----------------------|-------------|
-            | BLOCKER_COUNT        | ${{ steps.FetchSonarQubeIssues.outputs.BLOCKER_COUNT }} |
-            | CRITICAL_COUNT       | ${{ steps.FetchSonarQubeIssues.outputs.CRITICAL_COUNT }} |
-            | MAJOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT }} |
-            | MINOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MINOR_COUNT }} |
+            | CRITICAL_COUNT       | ${{ steps.sonar-scan.outputs.critical-count }} |
+            | VERY_HIGH_COUNT        | ${{ steps.sonar-scan.outputs.very-high-count }} |
+            | HIGH_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.high-count }} |
+            | MEDIUM_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.medium-count  }} |
+            | LOW_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.low-count  }} |
+
           format: MARKDOWN
   deploy:
 ## SPIKE-BUSTER to enter a CBC interogtation step here. 
