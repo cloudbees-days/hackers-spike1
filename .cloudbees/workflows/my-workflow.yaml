@@ -193,7 +193,7 @@ jobs:
       - name: Register_deployed_artifact
         uses: https://github.com/cloudbees-io/register-deployed-artifact@v1
         with:
-          name: "hackers-organized"
+          name: "ldonleycb/hackers-organized"
           version: "${{ cloudbees.scm.sha }}"
           url: "${{ secrets.DOCKERHUB_USER }}/hackers-organized:${{ cloudbees.scm.sha }}"
           digest: ""
