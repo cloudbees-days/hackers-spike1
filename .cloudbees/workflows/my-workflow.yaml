@@ -116,6 +116,7 @@ jobs:
       #     cover-file-name: coverage/clover.xml
       #     sonar-exclusion: tests/*
       - name: Scan with SonarQube
+        id: sonar-scan
         uses: https://github.com/cloudbees-io/sonarqube-sast-scan-code@v1
         with:
           server-url: https://sonarqube.cb-demos.io
