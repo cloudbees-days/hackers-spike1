@@ -94,7 +94,7 @@ jobs:
   scan:
     outputs:
       BLOCKER_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.BLOCKER_COUNT }}
-      CRITICAL_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.CRITICAL_COUNT }}
+      CRITICAL_COUNT: ${{ steps.sonar-scan.outputs.critical-count }}
       MAJOR_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT }}
       MINOR_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.MINOR_COUNT }}
     steps:
@@ -159,6 +159,8 @@ jobs:
             | Severity             | Issue Count |
             |----------------------|-------------|
             | CRITICAL_COUNT       |${{steps.sonar-scan.outputs.critical-count}} |
+            | VERY_HIGH_COUNT       |${{steps.sonar-scan.outputs.very-high-count}} |
+            | HIGH_COUNT       |${{steps.sonar-scan.outputs.high-count}} |
 
           format: MARKDOWN
   deploy:
@@ -166,7 +168,7 @@ jobs:
     environment: DOW Production
     steps:
       - name: Quality gate
-        if: ${{ needs.scan.outputs.CRITICAL_COUNT > 1 }} 
+        if: ${{ needs.scan.outputs.CRITICAL_COUNT < 1 }} 
         uses: docker://alpine:3.18
         run: |
           echo "Deployment gate failed: Critical test failure"
