@@ -133,6 +133,7 @@ jobs:
         id: FetchSonarQubeIssues
         uses: docker://alpine/git:latest
         run: |
+          set -x
           apk add --no-cache curl jq
           curl -u ${{ secrets.SONAR_USER }}:${{ secrets.SONAR_TOKEN }} \
           "https://sonarqube.cb-demos.io/api/issues/search?componentKeys=HackersOrganized&severities=BLOCKER,CRITICAL,MAJOR,MINOR" \
