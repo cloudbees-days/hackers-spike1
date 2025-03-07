@@ -158,7 +158,7 @@ jobs:
             
             | Severity             | Issue Count |
             |----------------------|-------------|
-            | CRITICAL_COUNT       | ${{ steps.sonar-scan.outputs.critical-count }} |
+            | CRITICAL_COUNT       | ${{ toJSON(steps.sonar-scan.outputs) }} |
 
           format: MARKDOWN
   deploy:
