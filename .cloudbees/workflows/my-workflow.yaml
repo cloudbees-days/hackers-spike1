@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - "**"
-  workflow_dispatch:
-    
 permissions:
   scm-token-own: read
   scm-token-org: read
@@ -93,9 +91,10 @@ jobs:
     needs: test
   scan:
     outputs:
-      CRITICAL_COUNT: ${{ steps.sonar-scan.outputs.critical-count }}
-      VERY_HIGH_COUNT: ${{ steps.sonar-scan.outputs.very-high-count }}
-      HIGH_COUNT: ${{ steps.sonar-scan.outputs.high-count }}
+      BLOCKER_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.BLOCKER_COUNT }}
+      CRITICAL_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.CRITICAL_COUNT }}
+      MAJOR_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT }}
+      MINOR_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.MINOR_COUNT }}
     steps:
       - name: Checkout
         uses: cloudbees-io/checkout@v1
@@ -114,14 +113,6 @@ jobs:
           language: LANGUAGE_JS
           cover-file-name: coverage/clover.xml
           sonar-exclusion: tests/*
-      # - name: Scan with SonarQube
-      #   id: sonar-scan
-      #   uses: https://github.com/cloudbees-io/sonarqube-sast-scan-code@v1
-      #   with:
-      #     server-url: https://sonarqube.cb-demos.io
-      #     username: ${{ secrets.SONAR_USER }}
-      #     password: ${{ secrets.SONAR_TOKEN }}
-      #     language: "LANGUAGE_JS"
       - uses: cloudbees-io/snyk-sast-scan-code@v1
         name: Synk SAST
         kind: scan
@@ -162,22 +153,23 @@ jobs:
             
             | Severity             | Issue Count |
             |----------------------|-------------|
-            | CRITICAL_COUNT       | ${{ steps.sonar-scan.outputs.critical-count }}  |
-            | VERY_HIGH_COUNT      | ${{ steps.sonar-scan.outputs.very-high-count }}  |
-            | HIGH_COUNT           | ${{ steps.sonar-scan.outputs.high-count }}      |
-            | MEDIUM_COUNT         | ${{ steps.sonar-scan.outputs.medium-count }}    |
-            | LOW_COUNT            | ${{ steps.sonar-scan.outputs.low-count }}       |
+            | BLOCKER_COUNT        | ${{ steps.FetchSonarQubeIssues.outputs.BLOCKER_COUNT }} |
+            | CRITICAL_COUNT       | ${{ steps.FetchSonarQubeIssues.outputs.CRITICAL_COUNT }} |
+            | MAJOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT }} |
+            | MINOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MINOR_COUNT }} |
           format: MARKDOWN
+
+      - name: Quality gate
+        if: ${{ steps.FetchSonarQubeIssues.outputs.CRITICAL_COUNT > 0 || steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT > 3 }} 
+        uses: docker://alpine:3.18
+        run: |
+          echo "Scan gate failed: Unacceptable quality threshold"
+          exit 1
+
   deploy:
 ## SPIKE-BUSTER to enter a CBC interogtation step here. 
     environment: DOW Production
     steps:
-      #- name: Quality gate
-      #  if: ${{ needs.scan.outputs.CRITICAL_COUNT > 0 || needs.scan.outputs.MAJOR_COUNT > 1 }} 
-      #  uses: docker://alpine:3.18
-      #  run: |
-      #    echo "Deployment gate failed: Unacceptable quality threshold"
-      #    exit 1
       - name: Checkout
         uses: cloudbees-io/checkout@v1
       - uses: cashokannamalai/kubeconfig@v1
