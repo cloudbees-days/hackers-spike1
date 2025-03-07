@@ -95,7 +95,7 @@ jobs:
     outputs:
       BLOCKER_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.BLOCKER_COUNT }}
       CRITICAL_COUNT: ${{ steps.sonar-scan.outputs.critical-count }}
-      MAJOR_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT }}
+      MAJOR_COUNT: ${{ steps.sonar-scan.outputs.very-high-count }}
       MINOR_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.MINOR_COUNT }}
     steps:
       - name: Checkout
@@ -168,10 +168,10 @@ jobs:
     environment: DOW Production
     steps:
       - name: Quality gate
-        if: ${{ needs.scan.outputs.CRITICAL_COUNT < 1 }} 
+        if: ${{ needs.scan.outputs.CRITICAL_COUNT > 0 || needs.scan.outputs.MAJOR_COUNT > 0 }} 
         uses: docker://alpine:3.18
         run: |
-          echo "Deployment gate failed: Critical test failure"
+          echo "Deployment gate failed: Unacceptable quality threshold"
           exit 1
 
       - name: Checkout
