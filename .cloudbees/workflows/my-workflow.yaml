@@ -165,7 +165,7 @@ jobs:
     environment: DOW Production
     steps:
       - name: Quality gate
-        if: ${{ jobs.scan.outputs.CRITICAL_COUNT > 1 }} 
+        if: ${{ job.scan.outputs.CRITICAL_COUNT > 1 }} 
         uses: docker://alpine:3.18
         run: |
           echo "Deployment gate failed: Critical test failure"
