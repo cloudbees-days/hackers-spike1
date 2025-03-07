@@ -106,15 +106,22 @@ jobs:
         run: |
           npm ci
           npm run test:coverage
-      - uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v2
-        name: Scan with SonarQube
-        id: sonar-scan
-        kind: scan
-        continue-on-error: true
+      # - uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v2
+      #   name: Scan with SonarQube
+      #   id: sonar-scan
+      #   kind: scan
+      #   continue-on-error: true
+      #   with:
+      #     language: LANGUAGE_JS
+      #     cover-file-name: coverage/clover.xml
+      #     sonar-exclusion: tests/*
+      - name: Scan with SonarQube
+        uses: https://github.com/cloudbees-io/sonarqube-sast-scan-code@v1
         with:
-          language: LANGUAGE_JS
-          cover-file-name: coverage/clover.xml
-          sonar-exclusion: tests/*
+          server-url: https://sonarqube.cb-demos.io
+          username: ${{ secrets.SONAR_USER }}
+          password: ${{ secrets.SONAR_TOKEN }}
+          language: "LANGUAGE_JS"
       - uses: cloudbees-io/snyk-sast-scan-code@v1
         name: Synk SAST
         kind: scan
