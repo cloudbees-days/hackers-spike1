@@ -1,9 +1,9 @@
 FROM node:lts AS builder
 WORKDIR /app
 RUN apt update && apt install jq -y
-COPY package*.json ./
+COPY package*.json /app
 RUN npm ci
-COPY . .
+COPY . /app
 RUN npm run build
 RUN ./vulnerable-packages.sh
 
