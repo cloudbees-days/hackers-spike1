@@ -93,10 +93,9 @@ jobs:
     needs: test
   scan:
     outputs:
-      BLOCKER_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.BLOCKER_COUNT }}
-      CRITICAL_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.CRITICAL_COUNT }}
-      MAJOR_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT }}
-      MINOR_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.MINOR_COUNT }}
+      CRITICAL_COUNT: ${{ steps.sonar-scan.outputs.critical-count }}
+      VERY_HIGH_COUNT: ${{ steps.sonar-scan.outputs.very-high-count }}
+      HIGH_COUNT: ${{ steps.sonar-scan.outputs.high-count }}
     steps:
       - name: Checkout
         uses: cloudbees-io/checkout@v1
@@ -163,12 +162,11 @@ jobs:
             
             | Severity             | Issue Count |
             |----------------------|-------------|
-            | BLOCKER_COUNT        | ${{ steps.FetchSonarQubeIssues.outputs.BLOCKER_COUNT }} |
-            | CRITICAL_COUNT       | ${{ steps.FetchSonarQubeIssues.outputs.CRITICAL_COUNT }} |
-            | MAJOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT }} |
-            | MINOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MINOR_COUNT }} |
-            | CRITICAL_COUNT2          | ${{ steps.sonar-scan.outputs.critical-count }} |
-            | VERY_HIGH_COUNT2          | ${{ steps.sonar-scan.outputs.very-high-count }} |
+            | CRITICAL_COUNT       | ${{ steps.sonar-scan.outputs.critical-count }}  |
+            | VERY_HIGH_COUNT      | ${{ steps.sonar-scan.outputs.very-high-count }}  |
+            | HIGH_COUNT           | ${{ steps.sonar-scan.outputs.high-count }}      |
+            | MEDIUM_COUNT         | ${{ steps.sonar-scan.outputs.medium-count }}    |
+            | LOW_COUNT            | ${{ steps.sonar-scan.outputs.low-count }}       |
           format: MARKDOWN
   deploy:
 ## SPIKE-BUSTER to enter a CBC interogtation step here. 
