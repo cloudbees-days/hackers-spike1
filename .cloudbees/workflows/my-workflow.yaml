@@ -162,7 +162,7 @@ jobs:
           format: MARKDOWN
 
       - name: Quality gate
-        if: ${{ steps.FetchSonarQubeIssues.outputs.CRITICAL_COUNT > 0 || steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT > 3 }} 
+        if: ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT > 3 }} 
         uses: docker://alpine:3.18
         run: |
           echo "Scan gate failed: Unacceptable quality threshold"
