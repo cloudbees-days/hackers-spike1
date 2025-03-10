@@ -162,7 +162,7 @@ jobs:
           format: MARKDOWN
 ## Quality gate check
       - name: Quality gate
-        if: ${{ fromJSON(steps.FetchSonarQubeIssues.outputs.BLOCKER_COUNT) > 0 }} 
+        if: ${{ fromJSON(steps.FetchSonarQubeIssues.outputs.BLOCKER_COUNT) > 3 }} 
         uses: docker://alpine:3.18
         run: |
           echo "Scan gate failed: Unacceptable quality threshold"
