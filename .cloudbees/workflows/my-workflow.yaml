@@ -160,7 +160,7 @@ jobs:
             | MAJOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT }} |
             | MINOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MINOR_COUNT }} |
           format: MARKDOWN
-
+## Quality gate check
       - name: Quality gate
         if: ${{ fromJSON(steps.FetchSonarQubeIssues.outputs.BLOCKER_COUNT) > 0 }} 
         uses: docker://alpine:3.18
@@ -169,7 +169,6 @@ jobs:
           exit 1
 
   deploy:
-## SPIKE-BUSTER to enter a CBC interogtation step here. 
     environment: DOW Production
     steps:
       - name: Checkout
